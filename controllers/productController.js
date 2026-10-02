@@ -1,6 +1,7 @@
 const productService = require('../services/productService');
 
 const parseId = (value) => Number.parseInt(value, 10);
+const isValidId = (value) => /^\d+$/.test(value);
 
 const getProducts = async (req, res, next) => {
   try {
@@ -12,6 +13,10 @@ const getProducts = async (req, res, next) => {
 
 const getProductById = async (req, res, next) => {
   try {
+    if (!isValidId(req.params.id)) {
+      return res.status(400).json({ error: 'Product id must be a number' });
+    }
+
     const product = await productService.getProductById(parseId(req.params.id));
 
     if (!product) {
@@ -35,6 +40,10 @@ const createProduct = async (req, res, next) => {
 
 const updateProduct = async (req, res, next) => {
   try {
+    if (!isValidId(req.params.id)) {
+      return res.status(400).json({ error: 'Product id must be a number' });
+    }
+
     const product = await productService.updateProduct(parseId(req.params.id), req.body);
 
     if (!product) {
@@ -49,6 +58,10 @@ const updateProduct = async (req, res, next) => {
 
 const deleteProduct = async (req, res, next) => {
   try {
+    if (!isValidId(req.params.id)) {
+      return res.status(400).json({ error: 'Product id must be a number' });
+    }
+
     const deleted = await productService.deleteProduct(parseId(req.params.id));
 
     if (!deleted) {
