@@ -54,6 +54,7 @@ app.use('/products', (req, res, next) => {
 
     return invalidateCache(req, res, next);
 });
+
 app.use('/products', productRoutes);
 
 app.use((error, req, res, next) => {
