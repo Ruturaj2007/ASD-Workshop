@@ -36,13 +36,23 @@ const cacheMiddleware = (req, res, next) => {
     return next();
 };
 
+const invalidateCache = (req, res, next) => {
+    res.on('finish', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+            cache.clear();
+        }
+    });
+
+    next();
+};
+
 app.use(express.json());
 app.use('/products', (req, res, next) => {
     if (req.method === 'GET') {
         return cacheMiddleware(req, res, next);
     }
 
-    return next();
+    return invalidateCache(req, res, next);
 });
 app.use('/products', productRoutes);
 
